@@ -1,6 +1,11 @@
 # upstart
 upstartcollaboratory.org's html code
 
+In May 2024, David with Mihaly's tutoring/help, learned to strip the css elements from internet archive as well, and to use github to host. 
+Currently, upstartcollaboratory.org and its pages are hosted on github
+
+--
+
 <li> Upstart website got an error msg August 2023: "Error establishing a database connection"
 <li> David is learning how to resolve this. 
 <li> He renewed the domain, because namesilo prompted me to, even though he thought he renewed a few months ago.

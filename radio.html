@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Audio Radio</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav {
+            margin: 20px 0;
+        }
+        
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: background 0.3s ease;
+        }
+        
+        .nav a:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .iframe-container {
+            width: 100%;
+            height: calc(100vh - 150px);
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 18px;
+            text-align: center;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            display: none;
+            background: rgba(255, 0, 0, 0.2);
+            color: #ffcccb;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px;
+            }
+            
+            .nav a {
+                display: block;
+                margin: 5px 0;
+            }
+            
+            .iframe-container {
+                height: calc(100vh - 200px);
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎵 Random Audio Radio 🎵</h1>
+        <nav class="nav">
+            <a href="upstart/index.html">← Back to Home</a>
+            <a href="#" onclick="reloadPlayer()">🔄 Reload Player</a>
+            <a href="https://script.google.com/macros/s/1lbdqrcugnKMCVm1kHiE7BwBe_Eu_mVDrZJpkad59Q8nOWClUSukKyU_L/exec" target="_blank">🔗 Direct Link</a>
+        </nav>
+    </div>
+    
+    <div class="iframe-container">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div>Loading Random Audio Radio...</div>
+            <div style="font-size: 14px; margin-top: 10px; opacity: 0.8;">
+                This may take a few seconds...
+            </div>
+        </div>
+        
+        <iframe 
+            id="audioFrame"
+            src="https://script.google.com/macros/s/1lbdqrcugnKMCVm1kHiE7BwBe_Eu_mVDrZJpkad59Q8nOWClUSukKyU_L/exec"
+            onload="handleIframeLoad()"
+            onerror="handleIframeError()"
+            title="Random Audio Radio"
+            allowfullscreen>
+        </iframe>
+    </div>
+    
+    <div class="error-message" id="errorMessage">
+        <h3>Unable to load audio player</h3>
+        <p>The audio player failed to load. This might be due to:</p>
+        <ul style="text-align: left; display: inline-block;">
+            <li>Network connectivity issues</li>
+            <li>Google Apps Script being temporarily unavailable</li>
+            <li>Browser security settings blocking the iframe</li>
+        </ul>
+        <button onclick="reloadPlayer()" style="background: #ff6b6b; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+            Try Again
+        </button>
+    </div>
+
+    <script>
+        let loadTimeout;
+        
+        function handleIframeLoad() {
+            console.log('Audio player loaded successfully');
+            document.getElementById('loading').style.display = 'none';
+            clearTimeout(loadTimeout);
+        }
+        
+        function handleIframeError() {
+            console.log('Audio player failed to load');
+            showError();
+        }
+        
+        function showError() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('audioFrame').style.display = 'none';
+        }
+        
+        function reloadPlayer() {
+            const iframe = document.getElementById('audioFrame');
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Reset states
+            loading.style.display = 'block';
+            errorMessage.style.display = 'none';
+            iframe.style.display = 'block';
+            
+            // Reload iframe
+            iframe.src = iframe.src;
+            
+            // Set timeout to show error if loading takes too long
+            loadTimeout = setTimeout(showError, 15000); // 15 seconds
+        }
+        
+        // Set initial timeout
+        loadTimeout = setTimeout(showError, 15000);
+        
+        // Optional: Add analytics or other tracking
+        console.log('Audio Radio page loaded');
+        
+        // Handle navigation
+        window.addEventListener('beforeunload', function() {
+            console.log('Leaving audio radio page');
+        });
+    </script>
+</body>
+</html>
